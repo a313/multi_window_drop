@@ -70,6 +70,14 @@ packages:
       relative: true
     source: path
     version: "0.0.3"
+  dragdropwindows:
+    dependency: "direct main"
+    description:
+      name: dragdropwindows
+      sha256: "2e7f342d5ef224a55e3b5aef9a65f40a397c164484af67322aa56524916953d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   fake_async:
     dependency: transitive
     description:

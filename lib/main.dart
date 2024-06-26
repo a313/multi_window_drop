@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:drag_and_drop_windows/drag_and_drop_windows.dart';
+import 'package:dragdropwindows/dragdropwindows.dart';
 import 'package:flutter/material.dart';
 
 void main(List<String> args) {
@@ -63,6 +64,13 @@ class SubApp extends StatelessWidget {
     StreamSubscription subscription = dropEventStream.listen((paths) {
       print('dropEventStream: $paths');
     });
+
+    try {
+      Dragdropwindows.start((DropType type, List<String> results) {
+        print("Dragdropwindows type=$type results=$results");
+      });
+    } catch (e) {}
+
     return MaterialApp(
       home: Scaffold(
         body: Center(
