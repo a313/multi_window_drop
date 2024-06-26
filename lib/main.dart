@@ -8,10 +8,10 @@ import 'package:dragdropwindows/dragdropwindows.dart';
 import 'package:flutter/material.dart';
 
 void main(List<String> args) {
-  if (args.firstOrNull == 'multi_window') {
-    runApp(const SubApp());
-  } else {
+  if (args.isEmpty) {
     runApp(const MainApp());
+  } else {
+    runApp(const SubApp());
   }
 }
 
