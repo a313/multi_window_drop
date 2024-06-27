@@ -48,13 +48,6 @@ packages:
       relative: true
     source: path
     version: "0.2.0"
-  drag_and_drop_windows:
-    dependency: "direct main"
-    description:
-      path: "packages/drag_and_drop_windows"
-      relative: true
-    source: path
-    version: "0.0.3"
   fake_async:
     dependency: transitive
     description:

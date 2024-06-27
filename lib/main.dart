@@ -1,7 +1,7 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:desktop_multi_window/desktop_multi_window.dart';
-import 'package:drag_and_drop_windows/drag_and_drop_windows.dart';
 // import 'package:dragdropwindows/dragdropwindows.dart';
 import 'package:flutter/material.dart';
 
@@ -13,21 +13,8 @@ void main(List<String> args) {
   }
 }
 
-class MainApp extends StatefulWidget {
+class MainApp extends StatelessWidget {
   const MainApp({super.key});
-
-  @override
-  State<MainApp> createState() => _MainAppState();
-}
-
-class _MainAppState extends State<MainApp> {
-  @override
-  void initState() {
-    super.initState();
-    dropEventStream.listen((paths) {
-      print('MainApp dropEventStream: $paths');
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +23,8 @@ class _MainAppState extends State<MainApp> {
         body: Center(
           child: TextButton(
               onPressed: () async {
-                final window =
-                    await DesktopMultiWindow.createWindow(jsonEncode({
-                  'args1': 'multi_window',
-                  'args2': 100,
-                  'args3': true,
-                  'bussiness': 'bussiness_test',
-                }));
+                final window = await DesktopMultiWindow.createWindow(
+                    jsonEncode({'args1': 'multi_window'}));
                 window
                   ..setFrame(const Offset(0, 0) & const Size(400, 400))
                   ..center()
@@ -56,21 +38,8 @@ class _MainAppState extends State<MainApp> {
   }
 }
 
-class SubApp extends StatefulWidget {
+class SubApp extends StatelessWidget {
   const SubApp({super.key});
-
-  @override
-  State<SubApp> createState() => _SubAppState();
-}
-
-class _SubAppState extends State<SubApp> {
-  @override
-  void initState() {
-    super.initState();
-    dropEventStream.listen((paths) {
-      print('SubApp dropEventStream: $paths');
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +48,7 @@ class _SubAppState extends State<SubApp> {
         body: Center(
           child: TextButton(
               onPressed: () async {
-                print('Sub app');
+                log('Sub app');
               },
               child: const Text('Sub window')),
         ),

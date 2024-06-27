@@ -11,8 +11,8 @@ dependencies:
   #   path: packages/desktop_drop
   desktop_multi_window:
     path: packages/desktop_multi_window
-  drag_and_drop_windows:
-    path: packages/drag_and_drop_windows
+  # drag_and_drop_windows:
+  #   path: packages/drag_and_drop_windows
   # dragdropwindows: ^0.0.4
   flutter:
     sdk: flutter

@@ -3,10 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  desktop_drop
   desktop_multi_window
-  drag_and_drop_windows
-  dragdropwindows
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
