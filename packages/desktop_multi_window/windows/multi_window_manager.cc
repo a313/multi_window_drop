@@ -26,7 +26,7 @@ class FlutterMainWindow : public BaseFlutterWindow {
     return channel_.get();
   }
 
- protected:
+//  protected:
 
   HWND GetWindowHandle() override {
     return hwnd_;
@@ -76,6 +76,7 @@ void MultiWindowManager::AttachFlutterMainWindow(
     std::cout << "Error: main window already exists" << std::endl;
     return;
   }
+
   window_channel->SetMethodCallHandler(
       [this](int64_t from_window_id,
              int64_t target_window_id,
@@ -165,4 +166,55 @@ void MultiWindowManager::HandleWindowChannelCall(
   }
   target_window_channel->InvokeMethod(from_window_id, call, arguments, std::move(result));
 }
+
+// add FlashWindow
+void MultiWindowManager::FlashWindow(int64_t id) {
+    auto window = windows_.find(id);
+    if (window != windows_.end()) {
+        window->second->FlashWindow();
+    }
+}
+// add focus
+void MultiWindowManager::Focus(int64_t id) {
+    auto window = windows_.find(id);
+    if(window != windows_.end()){
+        window->second->Focus();
+    }
+}
+
+// add IsFocused
+bool MultiWindowManager::IsFocused(int64_t id){
+    auto window = windows_.find(id);
+    if(window != windows_.end()){
+        return window->second->IsFocused();
+    }
+
+    return false;
+}
+// add getBounds
+flutter::EncodableMap MultiWindowManager::GetBounds( int64_t id, const flutter::EncodableMap& args){
+    flutter::EncodableMap value;
+    auto window = windows_.find(id);
+    if (window != windows_.end()) {
+        value = window->second->GetBounds(args);
+    }
+
+    return value;
+}
+
+//add SetTitleBarHidden
+void MultiWindowManager::SetTitleBarHidden(int64_t id){
+    auto window = windows_.find(id);
+    if(window != windows_.end()){
+        window->second->SetTitleBarHidden();
+    }
+}
+
+void MultiWindowManager::SetMinimumSize(int64_t id, int64_t width, int64_t height) {
+    auto window = windows_.find(id);
+    if(window != windows_.end()){
+        window->second->SetMinimumSize(width, height);
+    }
+}
+
 

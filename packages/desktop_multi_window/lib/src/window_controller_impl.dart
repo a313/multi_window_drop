@@ -77,4 +77,63 @@ class WindowControllerMainImpl extends WindowController {
       'name': name,
     });
   }
+
+  //add flashWindow
+  @override
+  Future<void> flashWindow() {
+    return _channel.invokeMethod('flashWindow', _id);
+  }
+
+  //add foucs
+  @override
+  Future<void> focus() {
+    return _channel.invokeMethod('focus', _id);
+  }
+
+  //add isFoucs
+  @override
+  Future<bool> isFocused() async{
+    return await _channel.invokeMethod('isFocused', _id);
+  }
+
+  /// Returns `Rect` - The bounds of the window as Object.
+  /// add
+  double getDevicePixelRatio() {
+    // Subsequent version, remove this deprecated member.
+    // ignore: deprecated_member_use
+    return window.devicePixelRatio;
+  }
+  // add getBounds
+  Future<Rect> getBounds() async {
+    final Map<String, dynamic> arguments = {
+      'windowId' : _id,
+      'devicePixelRatio': getDevicePixelRatio(),
+    };
+    final Map<dynamic, dynamic> resultData = await _channel.invokeMethod(
+      'getBounds',
+      arguments,
+    );
+
+    return Rect.fromLTWH(
+      resultData['x'],
+      resultData['y'],
+      resultData['width'],
+      resultData['height'],
+    );
+  }
+
+  //add setTitleBarHidden
+  @override
+  Future<void> setTitleBarHidden() {
+    return _channel.invokeMethod('setTitleBarHidden', _id);
+  }
+
+  //add setMinimumSize
+  Future<void> SetMinimumSize(int width, int height) {
+    return _channel.invokeMethod('setMinimumSize', <String, dynamic>{
+      'windowId': _id,
+      'width': width,
+      'height': height,
+    });
+  }
 }

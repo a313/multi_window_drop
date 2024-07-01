@@ -35,8 +35,6 @@ class FlutterWindow : public BaseFlutterWindow {
     return window_channel_.get();
   }
 
- protected:
-
   HWND GetWindowHandle() override { return window_handle_; }
 
  private:

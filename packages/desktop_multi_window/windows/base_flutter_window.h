@@ -27,7 +27,39 @@ class BaseFlutterWindow {
 
   void Center();
 
- protected:
+  //add FlashWindow
+  void FlashWindow();
+
+  //add focus
+  void Focus();
+
+  //add isFocus
+  bool IsFocused();
+
+  //add getBounds
+  flutter::EncodableMap GetBounds(const flutter::EncodableMap& args);
+
+  //add IsMinimized
+  bool IsMinimized();
+
+  //add Restore
+  void Restore();
+
+  // add titleBar
+  void SetTitleBarHidden();
+
+
+  void SetMinimumSize(int64_t width, int64_t height) {
+      m_rcMinimumSize.x = (LONG) width;
+      m_rcMinimumSize.y = (LONG) height;
+      m_bHasMinSize = true;
+  };
+
+public:
+    bool m_bHasMinSize = false;
+    POINT m_rcMinimumSize = {0,0};
+
+protected:
 
   virtual HWND GetWindowHandle() = 0;
 

@@ -13,6 +13,10 @@
 extern "C" {
 #endif
 
+// DeskTopDropPluginRegister
+FLUTTER_PLUGIN_EXPORT void DesktopDropPluginRegisterWithRegistrar(
+    FlutterDesktopPluginRegistrarRef registrar);
+
 FLUTTER_PLUGIN_EXPORT void DesktopMultiWindowPluginRegisterWithRegistrar(
     FlutterDesktopPluginRegistrarRef registrar);
 

@@ -41,6 +41,24 @@ class MultiWindowManager : public std::enable_shared_from_this<MultiWindowManage
 
   void OnWindowDestroy(int64_t id) override;
 
+  //add FlashWindow
+  void FlashWindow(int64_t id);
+
+  //add Focus
+  void Focus(int64_t id);
+
+  //add IsFocused
+  bool IsFocused(int64_t id);
+
+  //add GetBounds
+  flutter::EncodableMap GetBounds(int64_t id, const flutter::EncodableMap& args);
+
+  //add SetTitleBarHidden
+  void SetTitleBarHidden(int64_t id);
+
+  //add Set Window Minimum size
+  void SetMinimumSize(int64_t id, int64_t width, int64_t height);
+
  private:
 
   std::map<int64_t, std::unique_ptr<BaseFlutterWindow>> windows_;

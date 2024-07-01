@@ -45,4 +45,22 @@ abstract class WindowController {
 
   /// Available only on macOS.
   Future<void> setFrameAutosaveName(String name);
+
+  // add flashWindow
+  Future<void> flashWindow();
+
+  // add focus
+  Future<void> focus();
+
+  // add isFocused
+  Future<bool> isFocused();
+
+  /// add bounds
+  Future<Rect> getBounds();
+
+  /// add setTitleBarHidden
+  Future<void> setTitleBarHidden();
+
+  /// Set Minimum Window Size
+  Future<void> SetMinimumSize(int width, int height);
 }

@@ -86,13 +86,30 @@ void BaseFlutterWindow::Close() {
 }
 
 void BaseFlutterWindow::Show() {
-  auto handle = GetWindowHandle();
-  if (!handle) {
-    return;
-  }
-  ShowWindow(handle, SW_SHOW);
+    auto handle = GetWindowHandle();
+    if (!handle) {
+        return;
+    }
 
+    DWORD gwlStyle = GetWindowLong(handle, GWL_STYLE);
+    gwlStyle = gwlStyle | WS_VISIBLE;
+    if ((gwlStyle & WS_VISIBLE) == 0) {
+        SetWindowLong(handle, GWL_STYLE, gwlStyle);
+        ::SetWindowPos(handle, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+    }
+
+    ShowWindowAsync(handle, SW_SHOW);
+    SetForegroundWindow(handle);
 }
+
+//void BaseFlutterWindow::Show() {
+//  auto handle = GetWindowHandle();
+//  if (!handle) {
+//    return;
+//  }
+//  ShowWindow(handle, SW_SHOW);
+//
+//}
 
 void BaseFlutterWindow::Hide() {
   auto handle = GetWindowHandle();
@@ -100,4 +117,109 @@ void BaseFlutterWindow::Hide() {
     return;
   }
   ShowWindow(handle, SW_HIDE);
+}
+
+//add Flash
+void BaseFlutterWindow::FlashWindow(){
+    auto handle = GetWindowHandle();
+    if(!handle){
+        return;
+    }
+    FLASHWINFO fi;
+    fi.cbSize = sizeof(FLASHWINFO);
+    fi.hwnd = handle;
+    fi.dwFlags = FLASHW_ALL | FLASHW_TIMERNOFG;
+    fi.uCount = 0;
+    fi.dwTimeout = 0;
+    ::FlashWindowEx(&fi);
+}
+//add focus
+//add focus
+void BaseFlutterWindow::Focus(){
+    auto handle = GetWindowHandle();
+    if(!handle) {
+        return;
+    }
+
+
+    if (IsMinimized()) {
+        Restore();
+    }
+
+    ::SetWindowPos(handle, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+    SetForegroundWindow(handle);
+}
+
+//add IsFocused
+bool BaseFlutterWindow::IsFocused(){
+    return GetWindowHandle() == GetActiveWindow();
+}
+
+//add bounds
+flutter::EncodableMap BaseFlutterWindow::GetBounds(
+        const flutter::EncodableMap& args) {
+    auto handle = GetWindowHandle();
+
+    double devicePixelRatio =
+            std::get<double>(args.at(flutter::EncodableValue("devicePixelRatio")));
+
+    flutter::EncodableMap resultMap = flutter::EncodableMap();
+    RECT rect;
+    if (GetWindowRect(handle, &rect)) {
+        double x = rect.left / devicePixelRatio * 1.0f;
+        double y = rect.top / devicePixelRatio * 1.0f;
+        double width = (rect.right - rect.left) / devicePixelRatio * 1.0f;
+        double height = (rect.bottom - rect.top) / devicePixelRatio * 1.0f;
+
+        resultMap[flutter::EncodableValue("x")] = flutter::EncodableValue(x);
+        resultMap[flutter::EncodableValue("y")] = flutter::EncodableValue(y);
+        resultMap[flutter::EncodableValue("width")] =
+                flutter::EncodableValue(width);
+        resultMap[flutter::EncodableValue("height")] =
+                flutter::EncodableValue(height);
+    }
+    return resultMap;
+}
+
+// add IsMinimized
+bool BaseFlutterWindow::IsMinimized() {
+    auto handle = GetWindowHandle();
+    // if(!handle) {
+    //   return;
+    // }
+    WINDOWPLACEMENT windowPlacement;
+    GetWindowPlacement(handle, &windowPlacement);
+
+    return windowPlacement.showCmd == SW_SHOWMINIMIZED;
+}
+// add Restore
+void BaseFlutterWindow::Restore() {
+    auto handle = GetWindowHandle();
+    if(!handle) {
+        return;
+    }
+    WINDOWPLACEMENT windowPlacement;
+    GetWindowPlacement(handle, &windowPlacement);
+
+    if (windowPlacement.showCmd != SW_NORMAL) {
+        PostMessage(handle, WM_SYSCOMMAND, SC_RESTORE, 0);
+    }
+}
+
+// add titleBarHidden
+void BaseFlutterWindow::SetTitleBarHidden() {
+    auto handle = GetWindowHandle();
+    if(!handle) {
+        return;
+    }
+
+    RECT rect;
+
+    GetWindowRect(handle, &rect);
+    SetWindowLong(handle, GWL_STYLE, WS_POPUP | WS_VISIBLE);
+    SetWindowPos(handle, HWND_TOPMOST, rect.left, rect.top, 0, 0,
+                 SWP_NOMOVE | SWP_NOSIZE |
+                 SWP_SHOWWINDOW);
+
+
 }

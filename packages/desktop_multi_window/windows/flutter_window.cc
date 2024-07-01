@@ -32,7 +32,7 @@ void RegisterWindowClass(WNDPROC wnd_proc) {
     window_class.cbWndExtra = 0;
     window_class.hInstance = GetModuleHandle(nullptr);
     window_class.hIcon =
-        LoadIcon(window_class.hInstance, IDI_APPLICATION);
+        LoadIcon(window_class.hInstance, MAKEINTRESOURCE(101));
     window_class.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1);
     window_class.lpszMenuName = nullptr;
     window_class.lpfnWndProc = wnd_proc;
@@ -82,6 +82,7 @@ FlutterWindow::FlutterWindow(
 ) : callback_(callback), id_(id), window_handle_(nullptr), scale_factor_(1) {
   RegisterWindowClass(FlutterWindow::WndProc);
 
+
   const POINT target_point = {static_cast<LONG>(10),
                               static_cast<LONG>(10)};
   HMONITOR monitor = MonitorFromPoint(target_point, MONITOR_DEFAULTTONEAREST);
@@ -89,7 +90,7 @@ FlutterWindow::FlutterWindow(
   scale_factor_ = dpi / 96.0;
 
   HWND window_handle = CreateWindow(
-      kFlutterWindowClassName, L"", WS_OVERLAPPEDWINDOW,
+      kFlutterWindowClassName, L"",  WS_OVERLAPPEDWINDOW,
       Scale(target_point.x, scale_factor_), Scale(target_point.y, scale_factor_),
       Scale(1280, scale_factor_), Scale(720, scale_factor_),
       nullptr, nullptr, GetModuleHandle(nullptr), this);
@@ -117,9 +118,7 @@ FlutterWindow::FlutterWindow(
     _g_window_created_callback(flutter_controller_.get());
   }
 
-  // hide the window when created.
   ShowWindow(window_handle, SW_HIDE);
-
 }
 
 // static
@@ -137,7 +136,8 @@ LRESULT CALLBACK FlutterWindow::WndProc(HWND window, UINT message, WPARAM wparam
     auto that = static_cast<FlutterWindow *>(window_struct->lpCreateParams);
     EnableFullDpiSupportIfAvailable(window);
     that->window_handle_ = window;
-  } else if (FlutterWindow *that = GetThisFromHandle(window)) {
+  }
+  else if (FlutterWindow *that = GetThisFromHandle(window)) {
     return that->MessageHandler(window, message, wparam, lparam);
   }
 
@@ -157,6 +157,14 @@ LRESULT FlutterWindow::MessageHandler(HWND hwnd, UINT message, WPARAM wparam, LP
   auto child_content_ = flutter_controller_ ? flutter_controller_->view()->GetNativeWindow() : nullptr;
 
   switch (message) {
+    case WM_GETMINMAXINFO: {
+        if(m_bHasMinSize) {
+            MINMAXINFO *info = reinterpret_cast<MINMAXINFO *>(lparam);
+            info->ptMinTrackSize = m_rcMinimumSize;
+            return 0;
+        }
+        break;
+    }
     case WM_FONTCHANGE: {
       flutter_controller_->engine()->ReloadSystemFonts();
       break;
@@ -191,9 +199,9 @@ LRESULT FlutterWindow::MessageHandler(HWND hwnd, UINT message, WPARAM wparam, LP
       RECT rect;
       GetClientRect(window_handle_, &rect);
       if (child_content_ != nullptr) {
-        // Size and position the child window.
+        // Size and position the child window
         MoveWindow(child_content_, rect.left, rect.top, rect.right - rect.left,
-                   rect.bottom - rect.top, TRUE);
+rect.bottom - rect.top, TRUE);
       }
       return 0;
     }
